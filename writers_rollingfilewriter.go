@@ -215,7 +215,8 @@ type rollerVirtual interface {
 	// rolled to.
 	getNewHistoryRollFileName(otherHistoryFiles []string) string
 
-	getCurrentFileName() string
+	
+	() string
 }
 
 // rollingFileWriter writes received messages to a file, until time interval passes
@@ -747,10 +748,14 @@ func (rwt *rollingFileWriterTime) getNewHistoryRollFileName(_ []string) string {
 }
 
 func (rwt *rollingFileWriterTime) getCurrentFileName() string {
+	// 使用当前日期替换{$date}
+	fileName := strings.ReplaceAll(rwt.fileName, "{$date}", time.Now().Format(rwt.timePattern))  
+	
 	if rwt.fullName {
-		return rwt.createFullFileName(rwt.fileName, time.Now().Format(rwt.timePattern))
+		return rwt.createFullFileName(fileName, time.Now().Format(rwt.timePattern))
 	}
-	return rwt.fileName
+	
+	return fileName
 }
 
 func (rwt *rollingFileWriterTime) String() string {
