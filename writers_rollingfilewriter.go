@@ -215,8 +215,7 @@ type rollerVirtual interface {
 	// rolled to.
 	getNewHistoryRollFileName(otherHistoryFiles []string) string
 
-	
-	() string
+	getCurrentFileName() string
 }
 
 // rollingFileWriter writes received messages to a file, until time interval passes
