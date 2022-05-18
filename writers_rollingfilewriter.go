@@ -259,23 +259,25 @@ func newRollingFileWriter(fpath string, rtype rollingType, atype rollingArchiveT
 }
 
 func (rw *rollingFileWriter) hasRollName(file string) bool {
+	fileName := strings.ReplaceAll(rw.fileName, "{$date}",  "")  
 	switch rw.nameMode {
 	case rollingNameModePostfix:
-		rname := rw.fileName + rollingLogHistoryDelimiter
+		rname := fileName + rollingLogHistoryDelimiter
 		return strings.HasPrefix(file, rname)
 	case rollingNameModePrefix:
-		rname := rollingLogHistoryDelimiter + rw.fileName
+		rname := rollingLogHistoryDelimiter + fileName
 		return strings.HasSuffix(file, rname)
 	}
 	return false
 }
 
 func (rw *rollingFileWriter) createFullFileName(originalName, rollname string) string {
+	fileName := strings.ReplaceAll(originalName, "{$date}",  "")  
 	switch rw.nameMode {
 	case rollingNameModePostfix:
-		return originalName + rollingLogHistoryDelimiter + rollname
+		return fileName + rollingLogHistoryDelimiter + rollname
 	case rollingNameModePrefix:
-		return rollname + rollingLogHistoryDelimiter + originalName
+		return rollname + rollingLogHistoryDelimiter + fileName
 	}
 	return ""
 }
@@ -490,11 +492,12 @@ func (rw *rollingFileWriter) deleteOldRolls(history []string) error {
 }
 
 func (rw *rollingFileWriter) getFileRollName(fileName string) string {
+	fileName := strings.ReplaceAll(rw.fileName, "{$date}",  "") 
 	switch rw.nameMode {
 	case rollingNameModePostfix:
-		return fileName[len(rw.fileName+rollingLogHistoryDelimiter):]
+		return fileName[len(fileName+rollingLogHistoryDelimiter):]
 	case rollingNameModePrefix:
-		return fileName[:len(fileName)-len(rw.fileName+rollingLogHistoryDelimiter)]
+		return fileName[:len(fileName)-len(fileName+rollingLogHistoryDelimiter)]
 	}
 	return ""
 }
