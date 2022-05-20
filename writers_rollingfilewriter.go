@@ -492,7 +492,8 @@ func (rw *rollingFileWriter) deleteOldRolls(history []string) error {
 }
 
 func (rw *rollingFileWriter) getFileRollName(fileName string) string {
-	fileName = strings.ReplaceAll(fileName, "{$date}",  "") 
+	// 将DATA标记替换成标准日期，便于长度一致。
+	fileName = strings.ReplaceAll(fileName, "{$date}",  "2006-01-02")
 	switch rw.nameMode {
 	case rollingNameModePostfix:
 		return fileName[len(fileName+rollingLogHistoryDelimiter):]
